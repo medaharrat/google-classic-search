@@ -30,6 +30,14 @@ const AI_OVERVIEW_CONTAINER_SELECTORS = [
   '[data-attrid="wholepage-ai-overview"]',
   'div[data-mpvis="AIOverview"]',
   '#m-x-content',
+  // Google's own script assigns id="m-x-content" to this element via JS,
+  // well after it first exists in the DOM — that gap is what let it flash
+  // visible even with the CSS pre-hide in place. `.D5ad8b` is the stable
+  // class already present on it from the moment it's created, confirmed by
+  // reading Google's own collapse/expand script (which does
+  // `document.querySelector(".D5ad8b")` before assigning the id), so this
+  // selector matches instantly instead of waiting on Google's JS to run.
+  '.D5ad8b',
 ];
 
 /**

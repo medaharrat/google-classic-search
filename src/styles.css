@@ -23,7 +23,12 @@
 html:not(.gcs-disabled) [data-attrid="AIOverview"],
 html:not(.gcs-disabled) [data-attrid="wholepage-ai-overview"],
 html:not(.gcs-disabled) div[data-mpvis="AIOverview"],
-html:not(.gcs-disabled) #m-x-content {
+html:not(.gcs-disabled) #m-x-content,
+/* See the matching comment on AI_OVERVIEW_CONTAINER_SELECTORS in
+   content.js: this is the stable class Google's own script reads
+   *before* it assigns id="m-x-content" via JS, so matching on it
+   directly closes the flash window that id-only matching left open. */
+html:not(.gcs-disabled) .D5ad8b {
   display: none !important;
 }
 
@@ -42,8 +47,8 @@ html:not(.gcs-disabled) #m-x-content {
  * Gated the opposite way from the block above: hidden only while
  * `html.gcs-reveal-pending` is present. content.js adds that class itself,
  * a few milliseconds into page load once it's read the "reduce flash"
- * setting from storage, and removes it after the grace period (see
- * REDUCE_FLASH_DELAY_MS). There's no safe default to assume here the way
+ * setting from storage, and removes it once DOM activity settles down (see
+ * the REDUCE_FLASH_* constants). There's no safe default to assume here the way
  * there is for the enabled/disabled block above — if the setting is off,
  * this class is simply never added, at zero cost.
  */
