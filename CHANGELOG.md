@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.10
+
+- Fix: 0.2.9's fixed ~600ms delay was still too short whenever the AI Overview loaded a bit slower than that, so it would still flash once the delay elapsed. "Prevent flash" now reveals the results column adaptively — once DOM activity actually settles down (min 400ms, 350ms of quiet, capped at 1.8s) — instead of guessing one fixed number.
+- Renamed the popup setting to "Prevent flash", dropped its explanatory subtext, and moved it under a separate "Advanced" section with a divider, so it reads at a glance and isn't crowded against the main toggle.
+
 ## 0.2.9
 
 - Add an opt-in "Reduce AI Overview flash" popup setting (off by default). Google's AI Overview often loads after the rest of the results are already visible, so 0.2.8's pre-hide CSS can't help when the element doesn't exist yet at paint time. This setting hides the results column up front and reveals it after a fixed ~600ms grace period, giving a late-arriving AI Overview a chance to load and get classified before anything is shown — a deliberate delay/flash-risk trade-off, opted into rather than the default.

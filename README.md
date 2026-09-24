@@ -71,14 +71,14 @@ A `MutationObserver` watches for DOM changes (Google renders results progressive
 
 `src/styles.css` also pre-hides the known container selectors directly via CSS injected at `document_start`, which applies before the page paints — this avoids a brief flash of the AI Overview that would otherwise be visible before the JS-driven path (which can only act once the element exists and the observer fires) catches up. This only covers strategy 1 above; the heading-text fallback can't be expressed in CSS, so it still depends on the JS path.
 
-Google's AI Overview frequently loads *after* the rest of the results are already visible, which no amount of fast detection can prevent — the element simply doesn't exist yet. The **Reduce AI Overview flash** popup setting (off by default) works around this by hiding the whole results column up front and revealing it again after a fixed ~600ms grace period, giving a late-arriving AI Overview a chance to load and get classified before anything is shown. This is a deliberate, opt-in trade-off (a small fixed delay on every search, even ones without an AI Overview) rather than the default behavior.
+Google's AI Overview frequently loads *after* the rest of the results are already visible, which no amount of fast detection can prevent — the element simply doesn't exist yet. The **Prevent flash** popup setting (under "Advanced", off by default) works around this by hiding the whole results column up front and revealing it once the page's DOM activity actually settles down — rather than after one fixed guessed delay, since a fixed delay is either too short (AI Overview still flashes if it loads slower than the delay) or unnecessarily long. It's bounded by a hard cap so a page that never goes quiet doesn't stay hidden indefinitely (see the `REDUCE_FLASH_*` constants in `src/content.js`). This is a deliberate, opt-in trade-off — a small delay on every search, even ones without an AI Overview — rather than the default behavior.
 
 ## Popup
 
 Clicking the toolbar icon opens a small popup:
 
 - **Hide AI Overviews** — the main on/off toggle. Off means the extension leaves the page completely alone.
-- **Reduce AI Overview flash** — opt-in, off by default. See above.
+- **Prevent flash** — opt-in, off by default, under "Advanced". See above.
 - **Help & feedback** — a link to this repository's issue tracker.
 
 Both toggle states are the only things the extension stores, via `chrome.storage.local` (see [Permissions](#permissions)). Flipping either takes effect immediately in any open Google Search tab, no reload needed.
