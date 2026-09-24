@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate manifest.json
+        run: node -e "JSON.parse(require('fs').readFileSync('manifest.json', 'utf8')); console.log('manifest.json is valid JSON')"
+
+      - name: Check JS syntax
+        run: |
+          for f in src/*.js; do
+            echo "Checking $f"
+            node --check "$f"
+          done
+
+      - name: Run detection tests
+        run: node tests/detection.test.js
+
+      - name: Check required icon files exist
+        run: |
+          for size in 16 32 48 128; do
+            test -f "icons/icon${size}.png" || { echo "Missing icons/icon${size}.png"; exit 1; }
+          done
+          echo "All icon sizes present"

@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for considering a contribution to Google Classic Search. This project intentionally stays small — please read [README.md](README.md) for the scope before proposing new features.
+Thanks for considering a contribution to Hide AI Overview for Google. This project intentionally stays small — please read [README.md](README.md) for the scope before proposing new features.
 
 ## Bug reports
 

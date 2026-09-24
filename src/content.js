@@ -1,5 +1,5 @@
 /**
- * Google Classic Search
+ * Hide AI Overview for Google
  *
  * Hides Google's AI Overview block on search result pages while leaving
  * everything else (organic results, ads, images, news, etc.) untouched.

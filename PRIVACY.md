@@ -1,6 +1,6 @@
 # Privacy Policy
 
-Google Classic Search is a local-only browser extension.
+Hide AI Overview for Google is a local-only browser extension.
 
 It does **not**:
 

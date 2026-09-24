@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1
+
+- Rename extension to "Hide AI Overview for Google" for Chrome Web Store discoverability
+- Add CI workflow (manifest validation + test suite on every push/PR)
+
 ## 0.2.0
 
 - Add toolbar popup with an enable/disable toggle and a help/feedback link

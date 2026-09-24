@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Google Classic Search",
-  "version": "0.2.0",
-  "description": "Hides Google's AI-generated search answers and brings back link-first search. Local-only, no tracking.",
+  "name": "Hide AI Overview for Google",
+  "version": "0.2.1",
+  "description": "Hides Google's AI Overview and brings back link-first search results. Local-only, no tracking, no external requests.",
   "permissions": ["storage"],
   "content_scripts": [
     {

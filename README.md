@@ -1,8 +1,13 @@
-# Google Classic Search
+<img src="icons/icon128.png" width="64" height="64" alt="" align="left" />
+
+# Hide AI Overview for Google
+
+[![CI](https://github.com/medaharrat/google-classic-search/actions/workflows/ci.yml/badge.svg)](https://github.com/medaharrat/google-classic-search/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 > Hide Google's AI answers and get back to the links.
 
-Google Classic Search runs entirely in your browser. It does not collect, transmit, or store your searches or browsing activity.
+Runs entirely in your browser. It does not collect, transmit, or store your searches or browsing activity.
 
 ## Why?
 
@@ -21,7 +26,7 @@ Some people prefer to scan traditional search results and check sources themselv
 
 ## Installation
 
-Google Classic Search is not yet on the Chrome Web Store. Install it in developer mode:
+Not yet on the Chrome Web Store. Install it in developer mode:
 
 1. Clone or download this repository.
 2. Open `chrome://extensions` in Chrome.
