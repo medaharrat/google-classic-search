@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.6
+
+- Use the full artwork consistently at every icon size (16/32/48/128), instead of falling back to a plain simplified glyph at 16-48px. That simplified fallback was visually close enough to the previous icon that it read as "unchanged" at a glance.
+
 ## 0.2.5
 
 - Fix: a large blank gap could remain above AI Overview's own "Show more" control after hiding. Google sizes that collapsible wrapper with an inline max-height/height for the pre-hidden text, which doesn't shrink just because the text is now `display:none`. `collapseEmptyAncestors()` now clears that stale inline sizing on the nearest ancestor it can't fully hide (because it still holds real content like that control).
