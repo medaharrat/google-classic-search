@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2
+
+- Fix: re-enabling the toggle could leave an empty wrapper "card" visible where the AI Overview used to be. `hideAIOverview()` now also hides any ancestor element that exists purely to wrap already-hidden AI Overview content.
+
 ## 0.2.1
 
 - Rename extension to "Hide AI Overview for Google" for Chrome Web Store discoverability

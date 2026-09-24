@@ -124,6 +124,35 @@ function hideAIOverview(element) {
   element.setAttribute(OVERVIEW_MARKER, 'true');
   knownOverviews.add(element);
   applyVisibility(element);
+  collapseEmptyAncestors(element);
+}
+
+/**
+ * Google often wraps the AI Overview in a styled "card" element (padding,
+ * background, rounded corners) that sits one or more levels above the
+ * container we actually matched. Hiding only the inner match left that
+ * outer card visibly present but empty. To fix that, walk up from the
+ * hidden element and also hide any ancestor whose only element children
+ * are themselves already-known AI Overview elements — i.e. an ancestor
+ * that exists purely to wrap the overview and nothing else. Stops as soon
+ * as an ancestor has any other content, or at the results container, so
+ * it can never remove organic results or other page structure.
+ */
+function collapseEmptyAncestors(element) {
+  const boundary = document.querySelector('#search') || document.body;
+  let node = element.parentElement;
+
+  while (node && node !== boundary && node !== document.body) {
+    const hasOtherContent = [...node.children].some(
+      (child) => !child.hasAttribute(OVERVIEW_MARKER)
+    );
+    if (hasOtherContent) break;
+
+    node.setAttribute(OVERVIEW_MARKER, 'true');
+    knownOverviews.add(node);
+    applyVisibility(node);
+    node = node.parentElement;
+  }
 }
 
 /** Show or hide a known AI Overview element based on the current `enabled` flag. */

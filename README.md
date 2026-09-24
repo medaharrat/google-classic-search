@@ -61,7 +61,7 @@ node tests/detection.test.js
 - `findAIOverviews()` — locates AI Overview elements on the page using two layered strategies:
   1. A list of known structural selectors/attributes Google currently uses for the AI Overview container.
   2. A fallback that looks for a heading whose text matches a known "AI Overview" label (in a growing list of locales), then walks up the DOM to find the smallest enclosing block — stopping as soon as it would include an organic result's `<h3>` title link, so it can never swallow real search results.
-- `hideAIOverview(element)` — hides a single located element via a CSS class (`.gcs-hidden { display: none !important }`) rather than inline styles, and marks it so it's never processed twice.
+- `hideAIOverview(element)` — hides a single located element via a CSS class (`.gcs-hidden { display: none !important }`) rather than inline styles, marks it so it's never processed twice, and calls `collapseEmptyAncestors()` to also hide any purely-decorative wrapper ("card") left empty above it, so no blank space remains.
 
 A `MutationObserver` watches for DOM changes (Google renders results progressively) and coalesces bursts of mutations into at most one scan per animation frame, so the extension does no polling and negligible work once the page is idle.
 
