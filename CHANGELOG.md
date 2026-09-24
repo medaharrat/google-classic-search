@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.7
+
+- The blank-gap fix in 0.2.5 only cleared inline `max-height`/`height`, which didn't help if Google sizes the collapse wrapper via a CSS class or a `grid-template-rows` collapse animation instead. `clearFixedSizing()` now forces `max-height`, `height`, `min-height`, `grid-template-rows`, and `overflow` back to content-driven with `!important`, so it wins regardless of which mechanism is in play.
+
 ## 0.2.6
 
 - Use the full artwork consistently at every icon size (16/32/48/128), instead of falling back to a plain simplified glyph at 16-48px. That simplified fallback was visually close enough to the previous icon that it read as "unchanged" at a glance.

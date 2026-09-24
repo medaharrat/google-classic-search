@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Hide AI Overview for Google",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Hides Google's AI Overview and brings back link-first search results. Local-only, no tracking, no external requests.",
   "permissions": ["storage"],
   "content_scripts": [

@@ -148,12 +148,13 @@ function collapseEmptyAncestors(element) {
     );
     if (hasOtherContent) {
       // This wrapper still holds real content (e.g. AI Overview's own
-      // "Show more" expand control) so we stop here rather than hiding it.
-      // But Google sizes these collapsible wrappers with an inline
-      // max-height/height set for the pre-hidden text, which doesn't
-      // shrink just because the text inside is now display:none — that
-      // leaves a large blank gap above the remaining control. Clearing the
-      // stale inline sizing lets it size to its actual remaining content.
+      // "Show more" expand control, or unrelated refinement chips) so we
+      // stop here rather than hiding it. But Google sizes these
+      // collapsible wrappers for the pre-hidden text — via inline height,
+      // a CSS class, or a grid-template-rows collapse animation — none of
+      // which shrink just because the text inside is now display:none.
+      // Force every likely sizing mechanism back to content-driven so the
+      // wrapper collapses to fit whatever real content is actually left.
       clearFixedSizing(node);
       break;
     }
@@ -165,14 +166,20 @@ function collapseEmptyAncestors(element) {
   }
 }
 
-/** Remove an inline max-height/height that no longer matches an element's real content. */
+/**
+ * Force an element back to sizing itself from its actual content, overriding
+ * whatever mechanism Google used to size it for the pre-hidden text — inline
+ * style, a CSS class, or a grid-template-rows collapse animation are all
+ * common techniques for this kind of expand/collapse UI. `!important` is
+ * needed because a plain inline-style write can't outrank a stylesheet rule.
+ */
 function clearFixedSizing(element) {
-  if (element.style.maxHeight && element.style.maxHeight !== 'none') {
-    element.style.maxHeight = '';
-  }
-  if (element.style.height && element.style.height !== 'auto') {
-    element.style.height = '';
-  }
+  const style = element.style;
+  style.setProperty('max-height', 'none', 'important');
+  style.setProperty('height', 'auto', 'important');
+  style.setProperty('min-height', '0', 'important');
+  style.setProperty('grid-template-rows', 'none', 'important');
+  style.setProperty('overflow', 'visible', 'important');
 }
 
 /** Show or hide a known AI Overview element based on the current `enabled` flag. */
