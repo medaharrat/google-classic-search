@@ -182,7 +182,10 @@ function collapseEmptyAncestors(element) {
 
   while (node && node !== boundary && node !== document.body) {
     const hasOtherContent = [...node.children].some(
-      (child) => !child.hasAttribute(OVERVIEW_MARKER) && !NON_RENDERING_TAGS.has(child.tagName)
+      (child) =>
+        !child.hasAttribute(OVERVIEW_MARKER) &&
+        !NON_RENDERING_TAGS.has(child.tagName) &&
+        !isEmptyHook(child)
     );
     if (hasOtherContent) {
       // This wrapper still holds real content (e.g. AI Overview's own
@@ -202,6 +205,19 @@ function collapseEmptyAncestors(element) {
     applyVisibility(node);
     node = node.parentElement;
   }
+}
+
+/**
+ * Google scatters empty jscontroller/jsaction "hook" elements (e.g.
+ * <div jsname="W2GRoe" data-ved="...">, <div jscontroller="kvefnf">) as
+ * siblings throughout the AI Overview's ancestor chain, wired up for later
+ * hydration but rendering nothing and taking no layout space. Like
+ * NON_RENDERING_TAGS, these must not count as "other content" blocking
+ * collapseEmptyAncestors's climb, or a single leftover hook keeps a large
+ * ancestor visible and reserving space for nothing.
+ */
+function isEmptyHook(element) {
+  return element.childElementCount === 0 && element.textContent.trim() === '';
 }
 
 /**

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.15
+
+- Fix: a blank gap could still remain even after 0.2.14, because Google also scatters empty jscontroller/jsaction "hook" elements (e.g. `<div jsname="W2GRoe">`, `<div jscontroller="kvefnf">`) as siblings throughout the AI Overview's ancestor chain — placeholders wired up for later hydration that render nothing and take no layout space. These aren't `<style>`/`<script>` tags, so 0.2.14's fix didn't cover them, but they fooled `collapseEmptyAncestors()`'s "other content" check the same way. Any child element with no children and no text content is now treated as an empty hook and ignored by that check, alongside non-rendering tags.
+
 ## 0.2.14
 
 - Fix: the blank space left behind after hiding AI Overview could still persist in some cases. Two root causes, both found by tracing real page dumps rather than guessing:
