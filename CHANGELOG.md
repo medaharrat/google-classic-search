@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.12
+
+- Fix: even with the AI Overview text itself fully hidden, its "Show more" pill (and gradient fade-overlay behind it) remained visible — pointless UI since the content it expands is always hidden. Added `.Jzkafd`, the class shared by both elements, to detection and the static CSS pre-hide.
+
 ## 0.2.11
 
 - Fix: the AI Overview could still flash briefly even with detection matching `#m-x-content`, because Google's own script only assigns that id via JS well after the element first exists in the DOM (confirmed by reading that script directly from a user-supplied page dump). Added `.D5ad8b` — the stable class already present on the element from creation — to both the JS selector list and the static CSS pre-hide, closing the timing gap without needing to wait on Google's JS to run at all.

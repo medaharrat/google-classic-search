@@ -28,7 +28,10 @@ html:not(.gcs-disabled) #m-x-content,
    content.js: this is the stable class Google's own script reads
    *before* it assigns id="m-x-content" via JS, so matching on it
    directly closes the flash window that id-only matching left open. */
-html:not(.gcs-disabled) .D5ad8b {
+html:not(.gcs-disabled) .D5ad8b,
+/* The "Show more" pill for the (permanently hidden) AI Overview content,
+   plus its gradient fade-overlay — see the matching comment in content.js. */
+html:not(.gcs-disabled) .Jzkafd {
   display: none !important;
 }
 

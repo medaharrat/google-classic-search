@@ -38,6 +38,14 @@ const AI_OVERVIEW_CONTAINER_SELECTORS = [
   // `document.querySelector(".D5ad8b")` before assigning the id), so this
   // selector matches instantly instead of waiting on Google's JS to run.
   '.D5ad8b',
+  // The "Show more" pill that expands the (permanently hidden) AI Overview
+  // content, plus the gradient fade-overlay behind it — both carry this
+  // class and share the same jsaction trigger, so this one selector covers
+  // both. Since we always keep the content itself hidden, a control that
+  // exists only to expand it is pure visual noise, not useful UI to leave
+  // behind. Present in the server-rendered HTML from the start (unlike
+  // #m-x-content above), so no timing gap here.
+  '.Jzkafd',
 ];
 
 /**
