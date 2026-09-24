@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Google Classic Search</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="header">
+      <img src="../icons/icon32.png" alt="" width="24" height="24" />
+      <h1>Google Classic Search</h1>
+    </header>
+
+    <p class="status" id="status">AI answers are hidden.</p>
+
+    <label class="toggle-row" for="enabled-toggle">
+      <span>Hide AI Overviews</span>
+      <span class="switch">
+        <input type="checkbox" id="enabled-toggle" />
+        <span class="slider" aria-hidden="true"></span>
+      </span>
+    </label>
+
+    <footer class="footer">
+      <a href="https://github.com/medaharrat/google-classic-search/issues" target="_blank" rel="noopener">Help &amp; feedback</a>
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

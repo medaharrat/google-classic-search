@@ -1,0 +1,4 @@
+/* Applied only to elements identified by findAIOverviews() in content.js. */
+.gcs-hidden {
+  display: none !important;
+}

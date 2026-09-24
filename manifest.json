@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Google Classic Search",
+  "version": "0.2.0",
+  "description": "Hides Google's AI-generated search answers and brings back link-first search. Local-only, no tracking.",
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.google.com/search*",
+        "*://www.google.co.uk/search*",
+        "*://www.google.de/search*",
+        "*://www.google.fr/search*",
+        "*://www.google.hu/search*"
+      ],
+      "js": ["src/content.js"],
+      "css": ["src/styles.css"],
+      "run_at": "document_start"
+    }
+  ],
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
