@@ -73,25 +73,6 @@ const OVERVIEW_MARKER = 'data-gcs-overview';
 /** Storage key for the popup's enable/disable toggle (see src/popup.js). */
 const STORAGE_KEY = 'enabled';
 
-/** Storage key for the popup's opt-in "reduce flash" toggle. Off by default. */
-const REDUCE_FLASH_KEY = 'reduceFlash';
-
-/**
- * Timing for "reduce flash" mode. A single fixed delay turned out to be too
- * short whenever the AI Overview happened to load a bit slower than usual —
- * once the delay elapsed and the page was revealed, a later-arriving AI
- * Overview would flash before being caught, same as with no delay at all.
- *
- * Instead of guessing one fixed number, this waits for the page's DOM
- * activity to actually settle down: keep the results hidden until at least
- * MIN_MS has passed AND nothing has mutated for QUIET_MS, re-checking every
- * time a new mutation resets that quiet window. MAX_MS is a hard cap so a
- * page that never goes quiet doesn't stay hidden indefinitely.
- */
-const REDUCE_FLASH_MIN_MS = 400;
-const REDUCE_FLASH_QUIET_MS = 350;
-const REDUCE_FLASH_MAX_MS = 1800;
-
 /** Elements identified as AI Overviews on this page, whether or not they're currently hidden. */
 const knownOverviews = new Set();
 
@@ -249,14 +230,7 @@ function scheduleScan() {
   });
 }
 
-let lastMutationAt = 0;
-
-function handleMutations() {
-  lastMutationAt = Date.now();
-  scheduleScan();
-}
-
-const observer = new MutationObserver(handleMutations);
+const observer = new MutationObserver(scheduleScan);
 
 function start() {
   // The observer runs regardless of `enabled`: it's cheap (see
@@ -277,41 +251,7 @@ function updateDisabledClass() {
   document.documentElement.classList.toggle('gcs-disabled', !enabled);
 }
 
-let reduceFlashPending = false;
-let reduceFlashStart = 0;
-let revealTimer = null;
-
-/** Reveals the results column that "reduce flash" mode hides (see styles.css). */
-function revealResults() {
-  reduceFlashPending = false;
-  clearTimeout(revealTimer);
-  document.documentElement.classList.remove('gcs-reveal-pending');
-}
-
-/**
- * Re-checks whether it's time to reveal the results column yet (see the
- * REDUCE_FLASH_* constants for the actual rule), rescheduling itself against
- * whichever deadline is soonest until one of them is satisfied.
- */
-function maybeRevealResults() {
-  if (!reduceFlashPending) return;
-
-  const now = Date.now();
-  const elapsed = now - reduceFlashStart;
-  const quietFor = now - lastMutationAt;
-
-  if (elapsed >= REDUCE_FLASH_MAX_MS || (elapsed >= REDUCE_FLASH_MIN_MS && quietFor >= REDUCE_FLASH_QUIET_MS)) {
-    revealResults();
-    return;
-  }
-
-  clearTimeout(revealTimer);
-  const waitForQuiet = REDUCE_FLASH_QUIET_MS - quietFor;
-  const waitForMax = REDUCE_FLASH_MAX_MS - elapsed;
-  revealTimer = setTimeout(maybeRevealResults, Math.max(50, Math.min(waitForQuiet, waitForMax)));
-}
-
-chrome.storage.local.get({ [STORAGE_KEY]: true, [REDUCE_FLASH_KEY]: false }, (result) => {
+chrome.storage.local.get({ [STORAGE_KEY]: true }, (result) => {
   enabled = result[STORAGE_KEY];
   updateDisabledClass();
 
@@ -319,17 +259,6 @@ chrome.storage.local.get({ [STORAGE_KEY]: true, [REDUCE_FLASH_KEY]: false }, (re
     document.addEventListener('DOMContentLoaded', start, { once: true });
   } else {
     start();
-  }
-
-  // Opt-in only: hide the results column up front and reveal it once DOM
-  // activity settles down, so a late-arriving AI Overview gets classified
-  // and hidden before anything is shown. See the REDUCE_FLASH_* constants.
-  if (enabled && result[REDUCE_FLASH_KEY]) {
-    document.documentElement.classList.add('gcs-reveal-pending');
-    reduceFlashPending = true;
-    reduceFlashStart = Date.now();
-    lastMutationAt = reduceFlashStart;
-    revealTimer = setTimeout(maybeRevealResults, REDUCE_FLASH_MIN_MS);
   }
 });
 

@@ -71,21 +71,18 @@ A `MutationObserver` watches for DOM changes (Google renders results progressive
 
 `src/styles.css` also pre-hides the known container selectors directly via CSS injected at `document_start`, which applies before the page paints — this avoids a brief flash of the AI Overview that would otherwise be visible before the JS-driven path (which can only act once the element exists and the observer fires) catches up. This only covers strategy 1 above; the heading-text fallback can't be expressed in CSS, so it still depends on the JS path.
 
-Google's AI Overview frequently loads *after* the rest of the results are already visible, which no amount of fast detection can prevent — the element simply doesn't exist yet. The **Prevent flash** popup setting (under "Advanced", off by default) works around this by hiding the whole results column up front and revealing it once the page's DOM activity actually settles down — rather than after one fixed guessed delay, since a fixed delay is either too short (AI Overview still flashes if it loads slower than the delay) or unnecessarily long. It's bounded by a hard cap so a page that never goes quiet doesn't stay hidden indefinitely (see the `REDUCE_FLASH_*` constants in `src/content.js`). This is a deliberate, opt-in trade-off — a small delay on every search, even ones without an AI Overview — rather than the default behavior.
-
 ## Popup
 
 Clicking the toolbar icon opens a small popup:
 
 - **Hide AI Overviews** — the main on/off toggle. Off means the extension leaves the page completely alone.
-- **Prevent flash** — opt-in, off by default, under "Advanced". See above.
 - **Help & feedback** — a link to this repository's issue tracker.
 
-Both toggle states are the only things the extension stores, via `chrome.storage.local` (see [Permissions](#permissions)). Flipping either takes effect immediately in any open Google Search tab, no reload needed.
+The toggle state is the only thing the extension stores, via `chrome.storage.local` (see [Permissions](#permissions)). Flipping it takes effect immediately in any open Google Search tab, no reload needed.
 
 ## Permissions
 
-- **`storage`** — stores two booleans (the popup's two toggles) locally on your device with `chrome.storage.local`. Nothing else is stored, and these values never leave your device (`storage.local`, not `storage.sync`).
+- **`storage`** — stores one boolean (the popup's on/off toggle) locally on your device with `chrome.storage.local`. Nothing else is stored, and this value never leaves your device (`storage.local`, not `storage.sync`).
 - The content script's own `matches` patterns in `manifest.json`, which limit it to Google Search result pages on a few domains.
 
 No `host_permissions`, `tabs`, or `webRequest` — none of these are needed for DOM-only hiding.

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.13
+
+- Remove the "Prevent flash" setting. Its adaptive-delay approach never fully eliminated the flash in practice and added a real cost (delaying every search's results) for uncertain benefit, so it wasn't a good trade-off to keep. The core detection/hiding improvements it was built alongside (`.D5ad8b`, `.Jzkafd` selectors) remain in place. Back to a single popup toggle.
+
 ## 0.2.12
 
 - Fix: even with the AI Overview text itself fully hidden, its "Show more" pill (and gradient fade-overlay behind it) remained visible — pointless UI since the content it expands is always hidden. Added `.Jzkafd`, the class shared by both elements, to detection and the static CSS pre-hide.

@@ -34,28 +34,3 @@ html:not(.gcs-disabled) .D5ad8b,
 html:not(.gcs-disabled) .Jzkafd {
   display: none !important;
 }
-
-/*
- * Opt-in "reduce flash" mode (off by default — see the popup). Google's AI
- * Overview often loads asynchronously *after* the rest of the results are
- * already visible, which is what causes the flash in the first place: no
- * amount of fast detection helps if the element doesn't exist yet. So
- * instead this hides the whole results column up front and content.js
- * reveals it after a short fixed grace period, giving a late-arriving AI
- * Overview a chance to load and get classified before anything is shown.
- *
- * `visibility: hidden` (not display:none) keeps the layout space reserved,
- * so revealing it doesn't shift anything else on the page.
- *
- * Gated the opposite way from the block above: hidden only while
- * `html.gcs-reveal-pending` is present. content.js adds that class itself,
- * a few milliseconds into page load once it's read the "reduce flash"
- * setting from storage, and removes it once DOM activity settles down (see
- * the REDUCE_FLASH_* constants). There's no safe default to assume here the way
- * there is for the enabled/disabled block above — if the setting is off,
- * this class is simply never added, at zero cost.
- */
-html.gcs-reveal-pending #rso,
-html.gcs-reveal-pending #search {
-  visibility: hidden !important;
-}
