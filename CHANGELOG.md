@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.5
+
+- Fix: a large blank gap could remain above AI Overview's own "Show more" control after hiding. Google sizes that collapsible wrapper with an inline max-height/height for the pre-hidden text, which doesn't shrink just because the text is now `display:none`. `collapseEmptyAncestors()` now clears that stale inline sizing on the nearest ancestor it can't fully hide (because it still holds real content like that control).
+
 ## 0.2.4
 
 - Replace the icon artwork with the provided source image, composited into a rounded-square badge with true alpha transparency (verified against a compositing bug where a CSS-based drop shadow left a dark ring baked into the PNG). 128px and the store master use the full artwork; 16/32/48px use a simplified glyph since the full detail wasn't legible at toolbar size.

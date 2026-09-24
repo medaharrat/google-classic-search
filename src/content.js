@@ -146,12 +146,32 @@ function collapseEmptyAncestors(element) {
     const hasOtherContent = [...node.children].some(
       (child) => !child.hasAttribute(OVERVIEW_MARKER)
     );
-    if (hasOtherContent) break;
+    if (hasOtherContent) {
+      // This wrapper still holds real content (e.g. AI Overview's own
+      // "Show more" expand control) so we stop here rather than hiding it.
+      // But Google sizes these collapsible wrappers with an inline
+      // max-height/height set for the pre-hidden text, which doesn't
+      // shrink just because the text inside is now display:none — that
+      // leaves a large blank gap above the remaining control. Clearing the
+      // stale inline sizing lets it size to its actual remaining content.
+      clearFixedSizing(node);
+      break;
+    }
 
     node.setAttribute(OVERVIEW_MARKER, 'true');
     knownOverviews.add(node);
     applyVisibility(node);
     node = node.parentElement;
+  }
+}
+
+/** Remove an inline max-height/height that no longer matches an element's real content. */
+function clearFixedSizing(element) {
+  if (element.style.maxHeight && element.style.maxHeight !== 'none') {
+    element.style.maxHeight = '';
+  }
+  if (element.style.height && element.style.height !== 'auto') {
+    element.style.height = '';
   }
 }
 
