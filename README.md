@@ -1,4 +1,6 @@
-<img src="icons/icon128.png" width="64" height="64" alt="" align="left" />
+<div align="center">
+
+<img src="icons/icon128.png" width="96" height="96" alt="" />
 
 # Hide AI Overview for Google
 
@@ -6,6 +8,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 > Hide Google's AI answers and get back to the links.
+
+</div>
 
 Runs entirely in your browser. It does not collect, transmit, or store your searches or browsing activity.
 
