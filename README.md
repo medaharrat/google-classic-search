@@ -69,6 +69,8 @@ node tests/detection.test.js
 
 A `MutationObserver` watches for DOM changes (Google renders results progressively) and coalesces bursts of mutations into at most one scan per animation frame, so the extension does no polling and negligible work once the page is idle.
 
+`src/styles.css` also pre-hides the known container selectors directly via CSS injected at `document_start`, which applies before the page paints — this avoids a brief flash of the AI Overview that would otherwise be visible before the JS-driven path (which can only act once the element exists and the observer fires) catches up. This only covers strategy 1 above; the heading-text fallback can't be expressed in CSS, so it still depends on the JS path.
+
 ## Popup
 
 Clicking the toolbar icon opens a small popup:

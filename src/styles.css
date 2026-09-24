@@ -1,4 +1,28 @@
-/* Applied only to elements identified by findAIOverviews() in content.js. */
+/* Applied by content.js to elements identified by findAIOverviews(). */
 .gcs-hidden {
+  display: none !important;
+}
+
+/*
+ * Pre-hide the known AI Overview container selectors via pure CSS, so they
+ * never get a chance to paint at all — CSS injected at document_start
+ * applies before the page renders, whereas content.js can only act after
+ * the element exists in the DOM and its MutationObserver callback fires,
+ * which is enough delay for the AI Overview to flash on screen first.
+ *
+ * Keep this selector list in sync with AI_OVERVIEW_CONTAINER_SELECTORS in
+ * src/content.js — it's the same "known attribute" strategy, just mirrored
+ * here so it can apply instantly. The heading-text fallback strategy can't
+ * be expressed in CSS (no way to match by text content), so it still
+ * depends on content.js and can still show a brief flash.
+ *
+ * `html.gcs-disabled` lets content.js opt back out once it reads the
+ * popup's actual on/off toggle from storage (which is async, so this CSS
+ * assumes "enabled" — the default — until told otherwise).
+ */
+html:not(.gcs-disabled) [data-attrid="AIOverview"],
+html:not(.gcs-disabled) [data-attrid="wholepage-ai-overview"],
+html:not(.gcs-disabled) div[data-mpvis="AIOverview"],
+html:not(.gcs-disabled) #m-x-content {
   display: none !important;
 }

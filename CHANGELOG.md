@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.8
+
+- Fix: the AI Overview could flash visible for a moment before being hidden, since content.js can only act after the element exists in the DOM and its MutationObserver callback fires. The known container selectors are now also pre-hidden via static CSS injected at document_start, which applies before the page paints — no JS delay. The heading-text fallback strategy still depends on JS (text can't be matched in CSS), so it can still show a brief flash in cases only that strategy catches.
+
 ## 0.2.7
 
 - The blank-gap fix in 0.2.5 only cleared inline `max-height`/`height`, which didn't help if Google sizes the collapse wrapper via a CSS class or a `grid-template-rows` collapse animation instead. `clearFixedSizing()` now forces `max-height`, `height`, `min-height`, `grid-template-rows`, and `overflow` back to content-driven with `!important`, so it wins regardless of which mechanism is in play.

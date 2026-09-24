@@ -19,6 +19,11 @@
  * container in DevTools, and add the new attribute/selector here rather
  * than replacing the old ones (Google rolls markup changes out gradually,
  * so multiple versions can be live at once).
+ *
+ * This same list is mirrored as static CSS in src/styles.css so these
+ * specific containers can be pre-hidden instantly at document_start,
+ * before this script's own MutationObserver could ever react — keep both
+ * lists in sync.
  */
 const AI_OVERVIEW_CONTAINER_SELECTORS = [
   '[data-attrid="AIOverview"]',
@@ -219,8 +224,20 @@ function start() {
   observer.observe(document.documentElement, { childList: true, subtree: true });
 }
 
+/**
+ * Mirrors `enabled` onto <html> as a class so the static CSS pre-hide rules
+ * in styles.css (see html:not(.gcs-disabled) there) can be switched off
+ * when the extension is actually disabled. That CSS applies instantly at
+ * document_start assuming "enabled" (its default), since reading the real
+ * value from storage is async — this reconciles it as soon as we know.
+ */
+function updateDisabledClass() {
+  document.documentElement.classList.toggle('gcs-disabled', !enabled);
+}
+
 chrome.storage.local.get({ [STORAGE_KEY]: true }, (result) => {
   enabled = result[STORAGE_KEY];
+  updateDisabledClass();
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', start, { once: true });
@@ -233,6 +250,7 @@ chrome.storage.local.get({ [STORAGE_KEY]: true }, (result) => {
 chrome.storage.onChanged.addListener((changes, areaName) => {
   if (areaName !== 'local' || !(STORAGE_KEY in changes)) return;
   enabled = changes[STORAGE_KEY].newValue;
+  updateDisabledClass();
   knownOverviews.forEach(applyVisibility);
 });
 
