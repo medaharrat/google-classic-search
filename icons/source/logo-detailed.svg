@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="100%" height="100%">
+  <defs>
+    <linearGradient id="badgeBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FCFEFF"/>
+      <stop offset="55%" stop-color="#EAF2FF"/>
+      <stop offset="100%" stop-color="#CFE3FF"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5B9BFF"/>
+      <stop offset="100%" stop-color="#2158D0"/>
+    </linearGradient>
+    <clipPath id="lensClip">
+      <circle cx="104" cy="98" r="46"/>
+    </clipPath>
+    <filter id="softShadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#1B2E5C" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+
+  <!-- Badge: rounded square with real alpha outside it (no opaque canvas) -->
+  <rect x="10" y="10" width="236" height="236" rx="56" fill="url(#badgeBg)" filter="url(#softShadow)"/>
+
+  <!-- Magnifying glass handle (drawn first, ring sits on top) -->
+  <line x1="72" y1="131" x2="22" y2="180" stroke="url(#glass)" stroke-width="24" stroke-linecap="round"/>
+
+  <!-- Content lines inside the lens (search results / classic list) -->
+  <g clip-path="url(#lensClip)">
+    <rect x="66" y="66" width="76" height="9" rx="4.5" fill="#2158D0"/>
+    <rect x="66" y="82" width="60" height="9" rx="4.5" fill="#B9CCF0"/>
+    <rect x="66" y="98" width="68" height="9" rx="4.5" fill="#2158D0"/>
+    <rect x="66" y="114" width="52" height="9" rx="4.5" fill="#B9CCF0"/>
+    <rect x="66" y="130" width="60" height="9" rx="4.5" fill="#2158D0"/>
+  </g>
+
+  <!-- Magnifying glass lens ring -->
+  <circle cx="104" cy="98" r="46" fill="none" stroke="url(#glass)" stroke-width="18"/>
+
+  <!-- "No AI" badge: white disc, red prohibition ring, crossed-out sparkle -->
+  <circle cx="180" cy="172" r="46" fill="#FFFFFF"/>
+  <circle cx="180" cy="172" r="38" fill="none" stroke="#E43D30" stroke-width="9"/>
+  <path d="M180 150 L184.5 163.5 L198 168 L184.5 172.5 L180 186 L175.5 172.5 L162 168 L175.5 163.5 Z"
+        fill="#1B2440"/>
+  <path d="M199 152 L201.3 158.7 L208 161 L201.3 163.3 L199 170 L196.7 163.3 L190 161 L196.7 158.7 Z"
+        fill="#1B2440"/>
+  <line x1="158" y1="150" x2="202" y2="194" stroke="#E43D30" stroke-width="9" stroke-linecap="round"/>
+</svg>

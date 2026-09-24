@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.3
+
+- Fix: icon had an opaque square canvas instead of real transparency, so it rendered as a hard-edged square in the toolbar and README instead of a rounded badge. Rebuilt as vector art with true alpha transparency outside the rounded badge, plus a simplified variant for the 16/32px sizes where the full detail turned to mush.
+
 ## 0.2.2
 
 - Fix: re-enabling the toggle could leave an empty wrapper "card" visible where the AI Overview used to be. `hideAIOverview()` now also hides any ancestor element that exists purely to wrap already-hidden AI Overview content.
