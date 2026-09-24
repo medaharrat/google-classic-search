@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.14
+
+- Fix: the blank space left behind after hiding AI Overview could still persist in some cases. Two root causes, both found by tracing real page dumps rather than guessing:
+  - Some of the AI Overview's own UI (its collapse wrapper, a gradient overlay, and the "Show more" button) are siblings rather than nested inside one another. `scan()` used to climb ancestors immediately after each match, so the first element processed would check its parent, find its not-yet-matched siblings, and stop one level too early — permanently leaving that parent's stale sizing in place. `scan()` now marks every match in a pass first, then climbs, so shared parents are correctly recognized as AI-Overview-only.
+  - Google injects inline `<style>`/`<script>` tags as direct children inside the AI Overview's ancestor chain. `collapseEmptyAncestors()`'s "does this ancestor have other content" check treated any unmarked child as real content, including these invisible, non-rendering tags — which blocked the climb from ever reaching the ancestor actually reserving the blank space. Non-rendering tags (`STYLE`, `SCRIPT`, `LINK`, `META`, `TEMPLATE`) are now excluded from that check.
+
 ## 0.2.13
 
 - Remove the "Prevent flash" setting. Its adaptive-delay approach never fully eliminated the flash in practice and added a real cost (delaying every search's results) for uncertain benefit, so it wasn't a good trade-off to keep. The core detection/hiding improvements it was built alongside (`.D5ad8b`, `.Jzkafd` selectors) remain in place. Back to a single popup toggle.

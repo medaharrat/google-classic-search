@@ -70,6 +70,18 @@ const AI_OVERVIEW_LABELS = new Set([
 /** Container element attribute marking an element as a known AI Overview. */
 const OVERVIEW_MARKER = 'data-gcs-overview';
 
+/**
+ * Tag names that render nothing and take no layout space. Google injects
+ * inline <style>/<script> tags as direct children throughout the AI
+ * Overview's ancestor chain (confirmed in a real page dump — an ancestor
+ * with an inline min-height had a <style> tag as a sibling of the actual
+ * content wrapper). Without this, collapseEmptyAncestors's "does this
+ * ancestor have other content" check treats those as real content and
+ * stops climbing before it ever reaches the ancestor that's actually
+ * reserving the blank space.
+ */
+const NON_RENDERING_TAGS = new Set(['STYLE', 'SCRIPT', 'LINK', 'META', 'TEMPLATE']);
+
 /** Storage key for the popup's enable/disable toggle (see src/popup.js). */
 const STORAGE_KEY = 'enabled';
 
@@ -135,17 +147,22 @@ function findAIOverviews(root = document) {
 }
 
 /**
- * Hide a single AI Overview element. Uses a CSS class (see styles.css)
- * rather than inline styles so behavior is easy to inspect/override, and
- * marks the element so we never re-process it. Visibility itself still
- * follows the `enabled` flag, so this is a no-op while disabled.
+ * Marks and hides a single AI Overview element. Uses a CSS class (see
+ * styles.css) rather than inline styles so behavior is easy to
+ * inspect/override, and marks the element so we never re-process it.
+ * Visibility itself still follows the `enabled` flag, so this is a no-op
+ * while disabled. Returns true if this element was newly marked (false if
+ * it was already known, e.g. from a previous scan).
+ *
+ * Deliberately does NOT climb ancestors here — see scan() for why that has
+ * to happen in a separate pass after every match in a batch is marked.
  */
-function hideAIOverview(element) {
-  if (element.hasAttribute(OVERVIEW_MARKER)) return;
+function markOverview(element) {
+  if (element.hasAttribute(OVERVIEW_MARKER)) return false;
   element.setAttribute(OVERVIEW_MARKER, 'true');
   knownOverviews.add(element);
   applyVisibility(element);
-  collapseEmptyAncestors(element);
+  return true;
 }
 
 /**
@@ -165,7 +182,7 @@ function collapseEmptyAncestors(element) {
 
   while (node && node !== boundary && node !== document.body) {
     const hasOtherContent = [...node.children].some(
-      (child) => !child.hasAttribute(OVERVIEW_MARKER)
+      (child) => !child.hasAttribute(OVERVIEW_MARKER) && !NON_RENDERING_TAGS.has(child.tagName)
     );
     if (hasOtherContent) {
       // This wrapper still holds real content (e.g. AI Overview's own
@@ -209,8 +226,24 @@ function applyVisibility(element) {
 }
 
 function scan() {
-  for (const el of findAIOverviews()) {
-    hideAIOverview(el);
+  const found = findAIOverviews();
+  const newlyMarked = [];
+  for (const el of found) {
+    if (markOverview(el)) newlyMarked.push(el);
+  }
+
+  // Only climb ancestors after every match from this pass is marked. Some
+  // of Google's AI Overview UI (the collapse wrapper, a gradient overlay,
+  // and the "Show more" button) are siblings rather than nested inside one
+  // another — climbing per-element as soon as it's found meant the first
+  // one processed would check its parent for "other content", find its
+  // not-yet-matched siblings, and stop one level too early, permanently
+  // leaving that parent's stale sizing in place. Doing this as a second
+  // pass means every sibling in the batch is already marked by the time
+  // any of them climbs, so the shared parent is correctly recognized as
+  // AI-overview-only and collapsed too.
+  for (const el of newlyMarked) {
+    collapseEmptyAncestors(el);
   }
 }
 
