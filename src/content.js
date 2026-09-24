@@ -57,6 +57,18 @@ const OVERVIEW_MARKER = 'data-gcs-overview';
 /** Storage key for the popup's enable/disable toggle (see src/popup.js). */
 const STORAGE_KEY = 'enabled';
 
+/** Storage key for the popup's opt-in "reduce flash" toggle. Off by default. */
+const REDUCE_FLASH_KEY = 'reduceFlash';
+
+/**
+ * How long to keep the results column hidden when "reduce flash" is on, to
+ * give a late-arriving AI Overview a chance to load and get classified
+ * before anything is shown. Fixed rather than adaptive on purpose — this is
+ * a deliberate, user-opted-into trade-off between a bounded delay and
+ * flash risk, not something to silently tune based on page behavior.
+ */
+const REDUCE_FLASH_DELAY_MS = 600;
+
 /** Elements identified as AI Overviews on this page, whether or not they're currently hidden. */
 const knownOverviews = new Set();
 
@@ -235,7 +247,12 @@ function updateDisabledClass() {
   document.documentElement.classList.toggle('gcs-disabled', !enabled);
 }
 
-chrome.storage.local.get({ [STORAGE_KEY]: true }, (result) => {
+/** Reveals the results column that "reduce flash" mode hides (see styles.css). */
+function revealResults() {
+  document.documentElement.classList.remove('gcs-reveal-pending');
+}
+
+chrome.storage.local.get({ [STORAGE_KEY]: true, [REDUCE_FLASH_KEY]: false }, (result) => {
   enabled = result[STORAGE_KEY];
   updateDisabledClass();
 
@@ -243,6 +260,14 @@ chrome.storage.local.get({ [STORAGE_KEY]: true }, (result) => {
     document.addEventListener('DOMContentLoaded', start, { once: true });
   } else {
     start();
+  }
+
+  // Opt-in only: hide the results column up front and reveal it after a
+  // fixed grace period, so a late-arriving AI Overview gets classified and
+  // hidden before anything is shown. See REDUCE_FLASH_DELAY_MS.
+  if (enabled && result[REDUCE_FLASH_KEY]) {
+    document.documentElement.classList.add('gcs-reveal-pending');
+    setTimeout(revealResults, REDUCE_FLASH_DELAY_MS);
   }
 });
 

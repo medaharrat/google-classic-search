@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.9
+
+- Add an opt-in "Reduce AI Overview flash" popup setting (off by default). Google's AI Overview often loads after the rest of the results are already visible, so 0.2.8's pre-hide CSS can't help when the element doesn't exist yet at paint time. This setting hides the results column up front and reveals it after a fixed ~600ms grace period, giving a late-arriving AI Overview a chance to load and get classified before anything is shown — a deliberate delay/flash-risk trade-off, opted into rather than the default.
+
 ## 0.2.8
 
 - Fix: the AI Overview could flash visible for a moment before being hidden, since content.js can only act after the element exists in the DOM and its MutationObserver callback fires. The known container selectors are now also pre-hidden via static CSS injected at document_start, which applies before the page paints — no JS delay. The heading-text fallback strategy still depends on JS (text can't be matched in CSS), so it can still show a brief flash in cases only that strategy catches.

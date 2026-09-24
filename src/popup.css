@@ -4,7 +4,7 @@
 
 body {
   margin: 0;
-  width: 260px;
+  width: 280px;
   font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: #1b2440;
   background: #f4f6fb;
@@ -33,7 +33,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 0 16px 14px;
+  gap: 12px;
+  margin: 0 16px 10px;
   padding: 10px 12px;
   background: #ffffff;
   border-radius: 10px;
@@ -42,12 +43,25 @@ body {
   user-select: none;
 }
 
+.toggle-row:last-of-type {
+  margin-bottom: 14px;
+}
+
+.hint {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 400;
+  color: #7d87ab;
+}
+
 .switch {
   position: relative;
   display: inline-block;
   width: 36px;
   height: 20px;
   flex-shrink: 0;
+  margin-top: 1px;
 }
 
 .switch input {
@@ -116,5 +130,9 @@ body {
   .status,
   .footer a {
     color: #b7bedd;
+  }
+
+  .hint {
+    color: #8b93b8;
   }
 }
